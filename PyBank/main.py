@@ -4,7 +4,7 @@ import os
 import csv
 
 # Set path for file
-MyBank = os.path.join('Pybank','Resources','budget_data.csv')
+MyBank = os.path.join('Resources','budget_data.csv')
 
 # Lists to store data
 Date = []
@@ -61,7 +61,7 @@ print(f"Greatest Increase in Profits: ")
 print(f"Greatest Decrease in Profits: ")
 
 		# Specify the file to write to
-output_path = os.path.join('Pybank', 'analysis', 'new.txt')
+output_path = os.path.join('analysis', 'new.txt')
 
 with open(output_path, 'w', newline='') as txtfile:
 
