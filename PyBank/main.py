@@ -1,3 +1,4 @@
+
 # This will allow us to create file paths across operating systems
 import os
 # Module for reading CSV files
@@ -7,61 +8,49 @@ import csv
 MyBank = os.path.join('Resources','budget_data.csv')
 
 # Lists to store data
-Date = []
-Total = []
+Data_Set = []
 Total_Prof_Loss = []
-Change_Prof_Loss = []
-Great_Increase =[]
-Great_Decreas = []
+Date = []
+Total = 0 
+Change = []
 
 # Open the CSV
 with open(MyBank) as csvfile:
 	csvreader = csv.reader(csvfile, delimiter=",")
-# Defining values and storing data deleted first row
-
-	averagelist = list(csvreader)
-	del averagelist[0]
-	Total_Months = 0
-	First_Month_Value = averagelist[0]
-	Last_Month_Value = averagelist[-1]
-	First_Month_Amount = First_Month_Value[1]
-	Last_Month_Amount = Last_Month_Value[1]
-
-	
-
 #Header info not needed
-	
 	csv_header = next(csvreader, None)
+#Find Total Months
+	Data_Set = list(csvreader)
+	Total_Months = len(Data_Set)
+#For loop to find total
+	for i in Data_Set:
+		Total_Prof_Loss.append(int(i[1]))
+		Date.append(i[0])
 
-#Read the rows in the csv file
-	for row in averagelist:
+	Total = sum(Total_Prof_Loss)
 
-#Add Total Profit/loss values
-		Total.append(int(row[1]))
-		Total_Prof_Loss = sum(Total) 
-#Find Greatest Increase
+#For loop to append average list and to get min and max
+	for j in range(1,len(Total_Prof_Loss)):
+		Change.append(Total_Prof_Loss[j] - Total_Prof_Loss[j-1])
+		Greatest_increase = max(Change)
+		Greatest_decrease = min(Change)
 	
+	Average = sum(Change) / len(Change)
 
-#Total months
-Total_Months = len(averagelist)
-Total_Months = int(Total_Months)
+	Greatest_Date = str(Date[Change.index(max(Change)) + 1])
+	Lowest_Date = str(Date[Change.index(min(Change)) + 1])
 
-#Average change
-Change_Prof_Loss = (int(First_Month_Amount) - int(Last_Month_Amount)) / (Total_Months - 1)
-
-
-
-
-	
-
-print(f"Total Months: {Total_Months}")
-print(f"Total: ${Total_Prof_Loss}")
-print(f"Average Change: {Change_Prof_Loss}")
-print(f"Greatest Increase in Profits: ")
-print(f"Greatest Decrease in Profits: ")
+#print on to screen
+print(f'Financial Analysis')
+print(f'----------------------------')
+print(f'Total Months: {Total_Months}')
+print(f'Total: ${Total:,}')
+print(f'Average Change: ${Average:.2f}')
+print(f'Greatest Increase in Profits: {Greatest_Date} (${Greatest_increase:,})')
+print(f'Greatest Decrease in Profits: {Lowest_Date} (${Greatest_decrease:,})')
 
 		# Specify the file to write to
-output_path = os.path.join('analysis', 'new.txt')
+output_path = os.path.join('analysis', 'PyBankResults.txt')
 
 with open(output_path, 'w', newline='') as txtfile:
 
@@ -69,15 +58,16 @@ with open(output_path, 'w', newline='') as txtfile:
     csvwriter = csv.writer(txtfile, delimiter=',')
 
         # Write the first row (column headers)
-    csvwriter.writerow(['Financial Analysis'])
-    csvwriter.writerow(['------------------'])
+    csvwriter.writerow([f'Financial Analysis'])
+    csvwriter.writerow([f'----------------------------'])
 
         # Write in Analysis Text File
-    csvwriter.writerow(['Total Months: %s' % Total_Months])
-    csvwriter.writerow(['Total: $%s' % Total_Prof_Loss ])
-    csvwriter.writerow(['Average Change: %s' % Change_Prof_Loss])
-    csvwriter.writerow(['Greatest Increase of Profits: '])
-    csvwriter.writerow(['Greatest Decrease of Profits: '])
+    csvwriter.writerow([f'Total Months: {Total_Months}'])
+    csvwriter.writerow([f'Total: ${Total}'])
+    csvwriter.writerow([f'Average Change: ${Average:.2f}'])
+    csvwriter.writerow([f'Greatest Increase in Profits: {Greatest_Date} (${Greatest_increase})'])
+    csvwriter.writerow([f'Greatest Decrease in Profits: {Lowest_Date} (${Greatest_decrease})'])
+
 
 
 
